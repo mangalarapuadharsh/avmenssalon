@@ -164,8 +164,8 @@
             .then(res => res.json())
             .then(data => {
                 const color = data.status === 'online' ? '#4CAF50' : '#bf3e3e';
-                const dbText = data.database ? ` (${data.database})` : '';
-                document.getElementById('server-status').innerHTML = `<span style="color: ${color}">● Online${dbText}</span>`;
+                // Simplified status: Just "Online", hide the DB type now that it's verified
+                document.getElementById('server-status').innerHTML = `<span style="color: ${color}">● Online</span>`;
             })
             .catch(() => {
                 // Fallback to old check if health endpoint fails (e.g. older cached version)
