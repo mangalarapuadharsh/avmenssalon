@@ -112,82 +112,12 @@ header {
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-.nav-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    position: relative;
+header.scrolled {
+    padding: 1rem 0;
+    background: rgba(13, 13, 13, 0.98);
 }
 
-.mobile-menu-btn {
-    display: none;
-    flex-direction: column;
-    justify-content: space-between;
-    width: 30px;
-    height: 21px;
-    cursor: pointer;
-    z-index: 1001;
-}
-
-.mobile-menu-btn span {
-    display: block;
-    height: 3px;
-    width: 100%;
-    background-color: var(--text-primary);
-    border-radius: 3px;
-    transition: var(--transition);
-}
-
-.mobile-menu-btn.active span:nth-child(1) {
-    transform: translateY(9px) rotate(45deg);
-}
-
-.mobile-menu-btn.active span:nth-child(2) {
-    opacity: 0;
-}
-
-.mobile-menu-btn.active span:nth-child(3) {
-    transform: translateY(-9px) rotate(-45deg);
-}
-
-.logo {
-    display: flex;
-    align-items: center;
-}
-
-.logo img {
-    display: block;
-    /* Ensure no background color is added */
-    background: transparent;
-}
-
-nav ul {
-    list-style: none;
-    display: flex;
-    gap: 2rem;
-}
-
-nav a {
-    color: var(--text-primary);
-    text-decoration: none;
-    font-size: 0.9rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    transition: var(--transition);
-}
-
-nav a:hover {
-    color: var(--accent);
-}
-
-/* Hero Section */
-.hero {
-    height: 100vh;
-    display: flex;
-    align-items: center;
-    position: relative;
-    overflow: hidden;
-}
+/* ... existing styles ... */
 
 .hero-bg {
     position: absolute;
@@ -203,6 +133,8 @@ nav a:hover {
     z-index: -1;
     transform: scale(1.1);
     animation: zoomOut 20s infinite alternate;
+    will-change: transform;
+    /* Hint for browser optimization */
 }
 
 @keyframes zoomOut {
