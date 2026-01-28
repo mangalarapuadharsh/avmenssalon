@@ -159,13 +159,17 @@
         const API_BASE = window.location.protocol === 'file:' ? 'http://localhost:5000' : '';
         const API_URL = `${API_BASE}/api`;
 
-        // Check Connection on Load
-        fetch(`${API_BASE}/appointments`) // Use a GET endpoint to test
-            .then(() => {
-                document.getElementById('server-status').innerHTML = '<span style="color: #4CAF50">● Online</span>';
+        // Check Connection & DB Type on Load
+        fetch(`${API_URL}/health`)
+            .then(res => res.json())
+            .then(data => {
+                const color = data.status === 'online' ? '#4CAF50' : '#bf3e3e';
+                const dbText = data.database ? ` (${data.database})` : '';
+                document.getElementById('server-status').innerHTML = `<span style="color: ${color}">● Online${dbText}</span>`;
             })
             .catch(() => {
-                document.getElementById('server-status').innerHTML = '<span style="color: #bf3e3e">● Offline</span>';
+                // Fallback to old check if health endpoint fails (e.g. older cached version)
+                document.getElementById('server-status').innerHTML = '<span style="color: #bf3e3e">● Offline (Connection Failed)</span>';
             });
 
         function switchTab(tab) {

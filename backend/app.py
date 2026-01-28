@@ -33,6 +33,18 @@ os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 def index():
     return app.send_static_file('index.html')
 
+@app.route('/api/health')
+def health_check():
+    db_uri = app.config['SQLALCHEMY_DATABASE_URI']
+    db_type = 'PostgreSQL' if 'postgres' in db_uri else 'SQLite'
+    is_live = 'postgres' in db_uri
+    return jsonify({
+        'status': 'online', 
+        'database': db_type, 
+        'using_live_db': is_live,
+        'timestamp': datetime.utcnow().isoformat()
+    })
+
 app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
