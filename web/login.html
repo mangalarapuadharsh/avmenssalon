@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | AV Mens Salon</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Work+Sans:wght@300;400;500&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .auth-container {
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .auth-image {
+            flex: 1;
+            background-image: url('assets/hero_barber.jpg');
+            background-size: cover;
+            background-position: center;
+        }
+
+        .auth-form-wrapper {
+            flex: 0 0 500px;
+            background: #111;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 3rem;
+            position: relative;
+        }
+
+        .auth-card {
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .auth-header {
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .auth-tabs {
+            display: flex;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid #333;
+        }
+
+        .auth-tab {
+            flex: 1;
+            padding: 1rem;
+            text-align: center;
+            cursor: pointer;
+            color: var(--text-secondary);
+            transition: all 0.3s;
+        }
+
+        .auth-tab.active {
+            color: var(--accent);
+            border-bottom: 2px solid var(--accent);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+        }
+
+        .auth-form {
+            display: none;
+        }
+
+        .auth-form.active {
+            display: block;
+        }
+
+        .back-link {
+            position: absolute;
+            top: 2rem;
+            left: 2rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .back-link:hover {
+            color: var(--accent);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="auth-container">
+        <div class="auth-image"></div>
+        <div class="auth-form-wrapper">
+            <a href="index.html" class="back-link">&larr; Back to Site</a>
+
+            <div class="auth-card">
+                <div class="auth-header">
+                    <img src="assets/logo.png" alt="Logo" style="height: 60px; margin-bottom: 1rem;">
+                    <h2>Welcome Back</h2>
+                    <div style="font-size: 0.8rem; color: #666; margin-top:0.5rem;" id="server-status">
+                        Checking server status...
+                    </div>
+                </div>
+
+                <div class="auth-tabs">
+                    <div class="auth-tab active" onclick="switchTab('login')">Sign In</div>
+                    <div class="auth-tab" onclick="switchTab('register')">Sign Up</div>
+                </div>
+
+                <!-- Login Form -->
+                <form id="login-form" class="auth-form active">
+                    <div class="form-group">
+                        <label>Username</label>
+                        <input type="text" id="login-username" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" id="login-password" required>
+                    </div>
+                    <button type="submit" class="btn-primary full-width">Sign In</button>
+                    <div id="login-message" style="margin-top: 1rem; text-align: center; display: none;"></div>
+                </form>
+
+                <!-- Register Form -->
+                <form id="register-form" class="auth-form">
+                    <div class="form-group">
+                        <label>Username</label>
+                        <input type="text" id="reg-username" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" id="reg-password" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Confirm Password</label>
+                        <input type="password" id="reg-confirm-password" required>
+                    </div>
+                    <button type="submit" class="btn-primary full-width">Create Account</button>
+                    <div id="reg-message" style="margin-top: 1rem; text-align: center; display: none;"></div>
+                </form>
+
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = window.location.protocol === 'file:' ? 'http://localhost:5000' : '';
+        const API_URL = `${API_BASE}/api`;
+
+        // Check Connection on Load
+        fetch(`${API_BASE}/appointments`) // Use a GET endpoint to test
+            .then(() => {
+                document.getElementById('server-status').innerHTML = '<span style="color: #4CAF50">● Online</span>';
+            })
+            .catch(() => {
+                document.getElementById('server-status').innerHTML = '<span style="color: #bf3e3e">● Offline</span>';
+            });
+
+        function switchTab(tab) {
+            document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.auth-form').forEach(f => f.classList.remove('active'));
+
+            if (tab === 'login') {
+                document.querySelectorAll('.auth-tab')[0].classList.add('active');
+                document.getElementById('login-form').classList.add('active');
+            } else {
+                document.querySelectorAll('.auth-tab')[1].classList.add('active');
+                document.getElementById('register-form').classList.add('active');
+            }
+        }
+
+        // LOGIN LOGIC
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const username = document.getElementById('login-username').value;
+            const password = document.getElementById('login-password').value;
+            const msg = document.getElementById('login-message');
+            const btn = e.target.querySelector('button');
+
+            msg.style.display = 'none';
+            btn.innerText = "Processing...";
+            btn.disabled = true;
+
+            try {
+                const response = await fetch(`${API_URL}/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({ username, password })
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    // Session handled by cookie, no localStorage needed
+
+                    msg.style.display = 'block';
+                    msg.style.color = '#4CAF50';
+                    msg.innerHTML = '<b>Success!</b> Redirecting...';
+
+                    setTimeout(() => {
+                        window.location.href = result.role === 'admin' ? 'admin.html' : 'index.html';
+                    }, 1000);
+                } else {
+                    throw new Error(result.error || 'Login failed');
+                }
+            } catch (error) {
+                msg.style.display = 'block';
+                msg.style.color = '#bf3e3e';
+                msg.innerHTML = error.message;
+            } finally {
+                btn.innerText = "Sign In";
+                btn.disabled = false;
+            }
+        });
+
+        // REGISTER LOGIC
+        document.getElementById('register-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const username = document.getElementById('reg-username').value;
+            const password = document.getElementById('reg-password').value;
+            const confirm = document.getElementById('reg-confirm-password').value;
+            const msg = document.getElementById('reg-message');
+            const btn = e.target.querySelector('button');
+
+            msg.style.display = 'none';
+
+            if (password !== confirm) {
+                msg.style.display = 'block';
+                msg.style.color = '#bf3e3e';
+                msg.innerText = "Passwords do not match";
+                return;
+            }
+
+            btn.innerText = "Creating...";
+            btn.disabled = true;
+
+            try {
+                const response = await fetch(`${API_URL}/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({ username, password })
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    alert('Account Created! Please Sign In.');
+                    switchTab('login');
+                    e.target.reset();
+                } else {
+                    throw new Error(result.error || 'Registration failed');
+                }
+            } catch (error) {
+                msg.style.display = 'block';
+                msg.style.color = '#bf3e3e';
+                msg.innerHTML = error.message;
+            } finally {
+                btn.innerText = "Create Account";
+                btn.disabled = false;
+            }
+        });
+    </script>
+</body>
+
+</html>

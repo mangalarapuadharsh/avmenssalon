@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Lounge | AV Mens Salon</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Work+Sans:wght@300;400;500&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            background-color: #121212;
+            color: #fff;
+            font-family: 'Work Sans', sans-serif;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            width: 100%;
+        }
+
+        header {
+            padding: 2rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            color: var(--accent);
+            margin: 0;
+        }
+
+        .back-link {
+            color: #fff;
+            text-decoration: none;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: all 0.3s;
+        }
+
+        .back-link:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .hub-content {
+            padding: 4rem 0;
+            flex: 1;
+        }
+
+        .tabs {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            color: #666;
+            font-size: 1.5rem;
+            font-family: 'Playfair Display', serif;
+            cursor: pointer;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .tab-btn.active {
+            color: var(--accent);
+            border-bottom-color: var(--accent);
+        }
+
+        .section {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        /* Snake Game Styles */
+        #game-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        canvas {
+            background-color: #000;
+            border: 2px solid var(--accent);
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.2);
+        }
+
+        .score-board {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            color: #aaa;
+        }
+
+        #start-btn {
+            margin-top: 1rem;
+            padding: 0.8rem 2rem;
+            background-color: var(--accent);
+            color: #000;
+            border: none;
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        /* Reading Styles */
+        .read-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .read-card {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 2rem;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: transform 0.3s;
+        }
+
+        .read-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent);
+        }
+
+        .read-card h3 {
+            color: var(--accent);
+            font-family: 'Playfair Display', serif;
+            margin-top: 0;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Landing Page Styles */
+        .hub-landing {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 2rem;
+            height: 60vh;
+            flex-wrap: wrap;
+        }
+
+        .big-option {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            width: 300px;
+            height: 300px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .big-option:hover {
+            transform: translateY(-10px) scale(1.02);
+            background: rgba(212, 175, 55, 0.1);
+            border-color: var(--accent);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .big-option h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+
+        .big-option p {
+            font-size: 1.1rem;
+            color: #ccc;
+        }
+
+        .big-option .icon {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .back-btn {
+            background: none;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: inherit;
+            margin-right: 1.5rem;
+            transition: all 0.3s;
+        }
+
+        .back-btn:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="container header-content">
+            <h1>The Lounge</h1>
+            <button onclick="window.close()" class="back-link"
+                style="background:none; cursor:pointer; font-family:inherit; font-size:1rem;">Close Lounge</button>
+        </div>
+    </header>
+
+    <div class="container hub-content">
+
+        <!-- Landing Page -->
+        <div id="hub-home" class="hub-landing active">
+            <div class="big-option" onclick="showSection('games')">
+                <div class="icon">🎮</div>
+                <h2>GAMES</h2>
+                <p>Play our arcade classics like Snake & Breakout.</p>
+            </div>
+            <div class="big-option" onclick="showSection('reads')">
+                <div class="icon">📚</div>
+                <h2>READS</h2>
+                <p>Relax with our curated library of books & articles.</p>
+            </div>
+        </div>
+
+        <!-- Snake Game Section -->
+        <div id="games" class="section">
+            <div class="section-header">
+                <button onclick="goHome()" class="back-btn">← Back to Menu</button>
+                <h2 style="margin:0; font-family:'Playfair Display', serif; color:var(--accent);">Arcade Lounge</h2>
+            </div>
+            <div id="game-container">
+                <div class="score-board">Score: <span id="score">0</span></div>
+                <canvas id="gameCanvas" width="400" height="400"></canvas>
+                <button id="start-btn" onclick="startGame()">Start Game</button>
+                <p style="margin-top: 1rem; color: #666; font-size: 0.9rem;">Use Arrow Keys to Move</p>
+            </div>
+
+            <div id="breakout-container"
+                style="display: flex; flex-direction: column; align-items: center; margin-top: 4rem; padding-top: 2rem; border-top: 1px solid rgba(255,255,255,0.1);">
+                <h2 style="color: var(--accent); font-family: 'Playfair Display', serif;">Breakout</h2>
+                <div class="score-board">Score: <span id="breakout-score">0</span></div>
+                <canvas id="breakoutCanvas" width="480" height="320"></canvas>
+                <button id="breakout-start-btn" onclick="startBreakout()"
+                    style="margin-top: 1rem; padding: 0.8rem 2rem; background-color: var(--accent); color: #000; border: none; font-weight: bold; font-size: 1rem; cursor: pointer; border-radius: 4px;">Start
+                    Game</button>
+                <p style="margin-top: 1rem; color: #666; font-size: 0.9rem;">Use Left/Right Arrow Keys</p>
+            </div>
+        </div>
+
+        <!-- Reading Section -->
+        <div id="reads" class="section">
+            <div class="section-header">
+                <button onclick="goHome()" class="back-btn">← Back to Menu</button>
+                <h2 style="margin:0; font-family:'Playfair Display', serif; color:var(--accent);">Reading Library</h2>
+            </div>
+            <div id="reads-container" class="read-grid">
+                <p style="text-align: center; color: #666; width: 100%;">Loading library...</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Security Check
+        if (localStorage.getItem('hubUnlocked') !== 'true') {
+            document.body.innerHTML = `
+                <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100vh; text-align:center;">
+                    <h1>Access Locked</h1>
+                    <p>Please scan the QR code from the main site to unlock this area.</p>
+                    <a href="index.html" style="color:var(--accent); margin-top:1rem;">Go to Main Site</a>
+                </div>
+            `;
+        }
+
+        const PORT = '5000';
+        const HOST = window.location.hostname;
+        const API_BASE = (window.location.port === PORT) ? '' : `http://${HOST}:${PORT}`;
+
+        async function loadBooks() {
+            const container = document.getElementById('reads-container');
+            try {
+                const res = await fetch(`${API_BASE}/api/books`);
+                const books = await res.json();
+
+                container.innerHTML = '';
+                if (books.length === 0) {
+                    container.innerHTML = '<p style="text-align: center; color: #666; width: 100%;">No books available yet.</p>';
+                    return;
+                }
+
+                books.forEach(book => {
+                    const card = document.createElement('div');
+                    card.className = 'read-card';
+                    card.onclick = () => window.open(`${API_BASE}/uploads/${book.filename}`, '_blank');
+                    card.style.cursor = 'pointer';
+
+                    card.innerHTML = `
+                        <h3>${book.title}</h3>
+                        <p style="font-style: italic; color: #888; margin-bottom: 0.5rem;">by ${book.author}</p>
+                        <p>${book.description || ''}</p>
+                        <p style="color:var(--accent); font-size:0.8rem; margin-top:1rem;">Click to Read PDF</p>
+                     `;
+                    container.appendChild(card);
+                });
+            } catch (e) {
+                console.error(e);
+                container.innerHTML = '<p style="color: #bf3e3e;">Failed to load library.</p>';
+            }
+        }
+
+        // Tab Switching
+        // Navigation Logic
+        function showSection(id) {
+            // Hide Home
+            document.getElementById('hub-home').style.display = 'none';
+            // Hide all sections
+            document.querySelectorAll('.section').forEach(el => el.style.display = 'none');
+            // Show specific section
+            const section = document.getElementById(id);
+            if (section) {
+                section.style.display = 'block';
+                section.style.animation = 'fadeIn 0.5s ease';
+
+                if (id === 'reads') {
+                    loadBooks(); // Fetch books when this tab is opened
+                }
+            }
+        }
+
+        function goHome() {
+            // Hide all sections
+            document.querySelectorAll('.section').forEach(el => el.style.display = 'none');
+            // Show Home
+            const home = document.getElementById('hub-home');
+            home.style.display = 'flex';
+            home.style.animation = 'fadeIn 0.5s ease';
+        }
+
+        // --- Snake Game Logic ---
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const box = 20;
+        let snake = [];
+        let food = {};
+        let score = 0;
+        let d;
+        let game;
+
+        function startGame() {
+            clearInterval(game);
+            snake = [];
+            snake[0] = { x: 9 * box, y: 10 * box };
+            score = 0;
+            document.getElementById('score').innerText = score;
+            d = null; // Reset direction
+            createFood();
+            game = setInterval(draw, 100);
+            document.getElementById('start-btn').innerText = 'Restart';
+        }
+
+        document.addEventListener('keydown', direction);
+
+        function direction(event) {
+            let key = event.keyCode;
+            if (key == 37 && d != "RIGHT") d = "LEFT";
+            else if (key == 38 && d != "DOWN") d = "UP";
+            else if (key == 39 && d != "LEFT") d = "RIGHT";
+            else if (key == 40 && d != "UP") d = "DOWN";
+
+            // Prevent scrolling with arrow keys
+            if ([37, 38, 39, 40].indexOf(key) > -1) {
+                event.preventDefault();
+            }
+        }
+
+        function createFood() {
+            food = {
+                x: Math.floor(Math.random() * 19 + 1) * box,
+                y: Math.floor(Math.random() * 19 + 1) * box
+            }
+        }
+
+        function collision(head, array) {
+            for (let i = 0; i < array.length; i++) {
+                if (head.x == array[i].x && head.y == array[i].y) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        function draw() {
+            // Gradient Background
+            let gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+            gradient.addColorStop(0, "#1a1a1a");
+            gradient.addColorStop(1, "#000");
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Draw subtle grid
+            ctx.strokeStyle = "rgba(255, 255, 255, 0.05)";
+            ctx.lineWidth = 1;
+            for (let i = 0; i < canvas.width; i += box) {
+                ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, canvas.height); ctx.stroke();
+                ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(canvas.width, i); ctx.stroke();
+            }
+
+            // Draw Snake
+            for (let i = 0; i < snake.length; i++) {
+                // Gradient Body
+                let snakeGradient = ctx.createLinearGradient(snake[i].x, snake[i].y, snake[i].x + box, snake[i].y + box);
+                snakeGradient.addColorStop(0, (i == 0) ? "#FFD700" : "#D4AF37");
+                snakeGradient.addColorStop(1, (i == 0) ? "#D4AF37" : "#AA8C2C");
+
+                ctx.fillStyle = snakeGradient;
+
+                // Rounded Rects (simulated)
+                ctx.beginPath();
+                ctx.roundRect(snake[i].x + 1, snake[i].y + 1, box - 2, box - 2, 4);
+                ctx.fill();
+
+                // Glow for head
+                if (i == 0) {
+                    ctx.shadowBlur = 10;
+                    ctx.shadowColor = "rgba(212, 175, 55, 0.5)";
+                } else {
+                    ctx.shadowBlur = 0;
+                }
+            }
+            ctx.shadowBlur = 0; // Reset
+
+            // Draw Food (Apple Style)
+            let foodX = food.x + box / 2;
+            let foodY = food.y + box / 2;
+            let radius = box / 2 - 2;
+
+            let foodGradient = ctx.createRadialGradient(foodX - 2, foodY - 2, 2, foodX, foodY, radius);
+            foodGradient.addColorStop(0, "#ff6b6b");
+            foodGradient.addColorStop(1, "#bf3e3e");
+
+            ctx.fillStyle = foodGradient;
+            ctx.beginPath();
+            ctx.arc(foodX, foodY, radius, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Apple shine
+            ctx.fillStyle = "rgba(255,255,255,0.4)";
+            ctx.beginPath();
+            ctx.arc(foodX - 3, foodY - 3, 3, 0, Math.PI * 2);
+            ctx.fill();
+
+            let snakeX = snake[0].x;
+            let snakeY = snake[0].y;
+
+            if (d == "LEFT") snakeX -= box;
+            if (d == "UP") snakeY -= box;
+            if (d == "RIGHT") snakeX += box;
+            if (d == "DOWN") snakeY += box;
+
+            // If snake eats the food
+            if (snakeX == food.x && snakeY == food.y) {
+                score++;
+                document.getElementById('score').innerText = score;
+                createFood();
+            } else {
+                // Remove the tail
+                snake.pop();
+            }
+
+            // Game Over conditions
+            let newHead = { x: snakeX, y: snakeY };
+
+            if (snakeX < 0 || snakeX >= canvas.width || snakeY < 0 || snakeY >= canvas.height || collision(newHead, snake)) {
+                clearInterval(game);
+
+                // Draw Game Over Overlay
+                ctx.fillStyle = "rgba(0,0,0,0.7)";
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                ctx.fillStyle = "white";
+                ctx.font = "bold 40px 'Playfair Display'";
+                ctx.textAlign = "center";
+                ctx.fillText("Game Over", canvas.width / 2, canvas.height / 2);
+                ctx.font = "20px 'Work Sans'";
+                ctx.fillText("Score: " + score, canvas.width / 2, canvas.height / 2 + 40);
+
+                return;
+            }
+
+            snake.unshift(newHead);
+        }
+
+        // --- Breakout Game Logic ---
+        const bCanvas = document.getElementById("breakoutCanvas");
+        const bCtx = bCanvas.getContext("2d");
+        let bBallRadius = 10;
+        let x, y, dx, dy;
+        let paddleHeight = 10;
+        let paddleWidth = 75;
+        let paddleX;
+        let rightPressed = false;
+        let leftPressed = false;
+        let brickRowCount = 3;
+        let brickColumnCount = 5;
+        let brickWidth = 75;
+        let brickHeight = 20;
+        let brickPadding = 10;
+        let brickOffsetTop = 30;
+        let brickOffsetLeft = 30;
+        let bricks = [];
+        let bScore = 0;
+        let bLives = 3;
+        let bGameInterval;
+
+        function initBreakout() {
+            x = bCanvas.width / 2;
+            y = bCanvas.height - 30;
+            dx = 2;
+            dy = -2;
+            paddleX = (bCanvas.width - paddleWidth) / 2;
+            bScore = 0;
+            bLives = 3;
+            document.getElementById('breakout-score').innerText = bScore;
+
+            bricks = [];
+            for (let c = 0; c < brickColumnCount; c++) {
+                bricks[c] = [];
+                for (let r = 0; r < brickRowCount; r++) {
+                    bricks[c][r] = { x: 0, y: 0, status: 1 };
+                }
+            }
+        }
+
+        document.addEventListener("keydown", keyDownHandler, false);
+        document.addEventListener("keyup", keyUpHandler, false);
+
+        function keyDownHandler(e) {
+            if (e.key == "Right" || e.key == "ArrowRight") {
+                rightPressed = true;
+            } else if (e.key == "Left" || e.key == "ArrowLeft") {
+                leftPressed = true;
+            }
+        }
+
+        function keyUpHandler(e) {
+            if (e.key == "Right" || e.key == "ArrowRight") {
+                rightPressed = false;
+            } else if (e.key == "Left" || e.key == "ArrowLeft") {
+                leftPressed = false;
+            }
+        }
+
+        function collisionDetection() {
+            for (let c = 0; c < brickColumnCount; c++) {
+                for (let r = 0; r < brickRowCount; r++) {
+                    let b = bricks[c][r];
+                    if (b.status == 1) {
+                        if (x > b.x && x < b.x + brickWidth && y > b.y && y < b.y + brickHeight) {
+                            dy = -dy;
+                            b.status = 0;
+                            bScore++;
+                            document.getElementById('breakout-score').innerText = bScore;
+                            if (bScore == brickRowCount * brickColumnCount) {
+                                alert("YOU WIN, CONGRATS!");
+                                clearInterval(bGameInterval);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        function drawBall() {
+            bCtx.beginPath();
+            let gradient = bCtx.createRadialGradient(x - 3, y - 3, 2, x, y, bBallRadius);
+            gradient.addColorStop(0, "#FFD700");
+            gradient.addColorStop(1, "#AA8C2C");
+            bCtx.fillStyle = gradient;
+            bCtx.arc(x, y, bBallRadius, 0, Math.PI * 2);
+            bCtx.fill();
+            bCtx.closePath();
+
+            // Shine
+            bCtx.beginPath();
+            bCtx.fillStyle = "rgba(255,255,255,0.4)";
+            bCtx.arc(x - 3, y - 3, 3, 0, Math.PI * 2);
+            bCtx.fill();
+            bCtx.closePath();
+        }
+
+        function drawPaddle() {
+            bCtx.beginPath();
+            let gradient = bCtx.createLinearGradient(paddleX, 0, paddleX, bCanvas.height);
+            gradient.addColorStop(0, "#666");
+            gradient.addColorStop(0.5, "#fff");
+            gradient.addColorStop(1, "#666");
+
+            bCtx.fillStyle = gradient;
+            bCtx.roundRect(paddleX, bCanvas.height - paddleHeight, paddleWidth, paddleHeight, 5);
+            bCtx.fill();
+            bCtx.closePath();
+        }
+
+        function drawBricks() {
+            for (let c = 0; c < brickColumnCount; c++) {
+                for (let r = 0; r < brickRowCount; r++) {
+                    if (bricks[c][r].status == 1) {
+                        let brickX = (c * (brickWidth + brickPadding)) + brickOffsetLeft;
+                        let brickY = (r * (brickHeight + brickPadding)) + brickOffsetTop;
+                        bricks[c][r].x = brickX;
+                        bricks[c][r].y = brickY;
+
+                        bCtx.beginPath();
+                        bCtx.roundRect(brickX, brickY, brickWidth, brickHeight, 3);
+
+                        let gradient = bCtx.createLinearGradient(brickX, brickY, brickX, brickY + brickHeight);
+                        gradient.addColorStop(0, "#bf3e3e");
+                        gradient.addColorStop(1, "#802020");
+                        bCtx.fillStyle = gradient;
+                        bCtx.fill();
+
+                        // Bevel highlight
+                        bCtx.strokeStyle = "rgba(255,255,255,0.3)";
+                        bCtx.lineWidth = 1;
+                        bCtx.stroke();
+                        bCtx.closePath();
+                    }
+                }
+            }
+        }
+
+        function drawBreakout() {
+            bCtx.clearRect(0, 0, bCanvas.width, bCanvas.height);
+            drawBricks();
+            drawBall();
+            drawPaddle();
+            collisionDetection();
+
+            if (x + dx > bCanvas.width - bBallRadius || x + dx < bBallRadius) {
+                dx = -dx;
+            }
+            if (y + dy < bBallRadius) {
+                dy = -dy;
+            } else if (y + dy > bCanvas.height - bBallRadius) {
+                if (x > paddleX && x < paddleX + paddleWidth) {
+                    dy = -dy;
+                } else {
+                    bLives--;
+                    if (!bLives) {
+                        alert("GAME OVER");
+                        clearInterval(bGameInterval);
+                        document.getElementById('breakout-start-btn').innerText = "Restart";
+                    } else {
+                        x = bCanvas.width / 2;
+                        y = bCanvas.height - 30;
+                        dx = 2;
+                        dy = -2;
+                        paddleX = (bCanvas.width - paddleWidth) / 2;
+                    }
+                }
+            }
+
+            if (rightPressed && paddleX < bCanvas.width - paddleWidth) {
+                paddleX += 7;
+            } else if (leftPressed && paddleX > 0) {
+                paddleX -= 7;
+            }
+
+            x += dx;
+            y += dy;
+        }
+
+        function startBreakout() {
+            clearInterval(bGameInterval);
+            initBreakout();
+            bGameInterval = setInterval(drawBreakout, 10);
+            document.getElementById('breakout-start-btn').innerText = "Running...";
+        }
+    </script>
+</body>
+
+</html>

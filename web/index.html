@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AV Mens Salon | Premium Grooming</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Work+Sans:wght@300;400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <header id="navbar">
+        <div class="container nav-container">
+            <div class="logo">
+                <img src="assets/logo.png" alt="AV Mens Salon" style="height: 90px; vertical-align: middle;">
+            </div>
+            <div class="mobile-menu-btn">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#services">Services</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                    <li><a href="#" id="scan-qr-link" style="display:none;" onclick="openCodeModal()">Enter Lounge
+                            Code</a></li>
+                    <li><a href="login.html" id="auth-link">Login</a></li>
+                </ul>
+            </nav>
+            <a href="#contact" class="btn-primary">Book Now</a>
+        </div>
+    </header>
+
+    <section id="home" class="hero">
+        <div class="hero-bg"></div>
+        <div class="hero-content container">
+            <h1 class="reveal-text">Redefining the Art of Grooming</h1>
+            <p class="reveal-text" style="font-size: 1.2rem; display: block; margin-top: 1rem;">Experience a cut above
+                the rest in an atmosphere of refined luxury.</p>
+            <div style="margin-top: 2rem;">
+                <a href="#services" class="btn-primary fade-in delay-2">View Services</a>
+            </div>
+        </div>
+    </section>
+
+    <section id="about" class="about section-padding">
+        <div class="container">
+            <div class="section-header">
+                <span class="subheading">Our Philosophy</span>
+                <h2>More Than Just a Haircut</h2>
+                <div class="line"></div>
+            </div>
+            <div class="about-content">
+                <p>We believe that grooming is a ritual, not a chore. At AV Mens Salon, we combine traditional
+                    barbering techniques with modern aesthetics to provide a service that leaves you looking and feeling
+                    your absolute best.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="services" class="services section-padding">
+        <div class="container">
+            <div class="section-header">
+                <span class="subheading">What We Do</span>
+                <h2>Our Services</h2>
+                <div class="line"></div>
+            </div>
+            <div class="services-grid">
+                <div class="service-card hidden" style="background-image: url('assets/haircut.png');">
+                    <div class="service-overlay">
+                        <div class="service-content">
+                            <h3>The Classic Cut</h3>
+                            <p>Precision haircut tailored to your style, finished with a hot towel refresh.</p>
+                            <span class="price">$45</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="service-card hidden delay-1" style="background-image: url('assets/shave.png');">
+                    <div class="service-overlay">
+                        <div class="service-content">
+                            <h3>Royal Shave</h3>
+                            <p>Traditional straight razor shave with pre-shave oil and hot towel treatment.</p>
+                            <span class="price">$35</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="service-card hidden delay-2" style="background-image: url('assets/beard.png');">
+                    <div class="service-overlay">
+                        <div class="service-content">
+                            <h3>Beard Sculpting</h3>
+                            <p>Detailed shaping and trimming to keep your beard looking sharp and manicured.</p>
+                            <span class="price">$25</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="service-card hidden delay-3"
+                    style="background-image: url('assets/haircut.png'); filter: grayscale(100%);">
+                    <!-- Reusing image for demo or generate another if needed -->
+                    <div class="service-overlay">
+                        <div class="service-content">
+                            <h3>The Full Service</h3>
+                            <p>Haircut, beard trim, and facial treatment for the ultimate grooming experience.</p>
+                            <span class="price">$80</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="team" class="team section-padding">
+        <div class="container">
+            <div class="section-header">
+                <span class="subheading">Expert Hands</span>
+                <h2>Meet the Masters</h2>
+                <div class="line"></div>
+            </div>
+            <div class="team-grid">
+                <div class="team-card hidden">
+                    <img src="assets/team.png" alt="Barber Team" class="team-img">
+                    <div class="team-info">
+                        <h3>James & Sarah</h3>
+                        <p>Master Barbers</p>
+                    </div>
+                </div>
+                <div class="team-card hidden delay-1">
+                    <img src="assets/beard.png" alt="Barber" class="team-img" style="object-position: top;">
+                    <div class="team-info">
+                        <h3>David Ross</h3>
+                        <p>Senior Stylist</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="testimonials" class="testimonials section-padding">
+        <div class="container">
+            <div class="section-header">
+                <span class="subheading">Client Stories</span>
+                <h2>What They Say</h2>
+                <div class="line"></div>
+            </div>
+            <div class="testimonials-grid">
+                <div class="testimonial-card hidden">
+                    <p>"The best haircut I've had in years. The attention to detail is unmatched."</p>
+                    <h4>- Michael T.</h4>
+                </div>
+                <div class="testimonial-card hidden delay-1">
+                    <p>"Great atmosphere and even better service. The Royal Shave is a must-try."</p>
+                    <h4>- Jonathan R.</h4>
+                </div>
+                <div class="testimonial-card hidden delay-2">
+                    <p>"Finally found a place that knows how to handle a beard properly. Highly recommend!"</p>
+                    <h4>- Chris P.</h4>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="contact section-padding">
+        <div class="container">
+            <div class="section-header">
+                <span class="subheading">Reservations</span>
+                <h2>Book Your Appointment</h2>
+                <div class="line"></div>
+            </div>
+            <div class="booking-form-container">
+                <form id="booking-form">
+                    <div class="form-group">
+                        <input type="text" id="name" placeholder="Your Name" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="tel" id="phone" placeholder="Phone Number" required>
+                    </div>
+                    <div class="form-group">
+                        <select id="service" required>
+                            <option value="" disabled selected>Select Service</option>
+                            <option value="Classic Cut">The Classic Cut ($45)</option>
+                            <option value="Royal Shave">Royal Shave ($35)</option>
+                            <option value="Beard Sculpting">Beard Sculpting ($25)</option>
+                            <option value="Full Service">The Full Service ($80)</option>
+                        </select>
+                    </div>
+                    <div class="form-group-row">
+                        <input type="date" id="date" required>
+                        <input type="time" id="time" required>
+                    </div>
+                    <div id="booking-message"
+                        style="margin-bottom: 1rem; text-align: center; font-weight: bold; min-height: 1.5rem;"></div>
+                    <button type="submit" class="btn-primary full-width">Confirm Booking</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container footer-content">
+            <div class="footer-logo">AV Mens Salon</div>
+            <p>&copy; 2026 AV Mens Salon. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Booking History Modal -->
+    <div id="history-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>My Appointments</h2>
+                <button class="close-modal" onclick="closeModal()">×</button>
+            </div>
+            <div id="history-list">
+                <!-- Bookings will be populated here -->
+            </div>
+            <div class="modal-footer"
+                style="display: flex; justify-content: space-between; align-items: center; margin-top: 1rem;">
+                <button onclick="openCodeModal()" class="btn-primary"
+                    style="font-size: 0.9rem; padding: 0.5rem 1rem;">Enter Lounge Code</button>
+                <button onclick="logout()" class="btn-primary"
+                    style="background:transparent; border:1px solid #bf3e3e; color:#bf3e3e;">Logout</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Access Code Modal -->
+    <div id="access-code-modal" class="modal-overlay">
+        <div class="modal-content" style="max-width: 400px; text-align: center;">
+            <div class="modal-header">
+                <h2>Enter Lounge Code</h2>
+                <button class="close-modal" onclick="closeCodeModal()">×</button>
+            </div>
+            <p style="margin-bottom: 1.5rem; color: #666;">Ask the admin for today's access code.</p>
+            <input type="text" id="access-code-input" maxlength="4" placeholder="****"
+                style="font-size: 2rem; width: 150px; text-align: center; letter-spacing: 0.5rem; padding: 0.5rem; border: 1px solid #ddd; border-radius: 4px; margin-bottom: 1.5rem;">
+            <div id="code-error" style="color: #bf3e3e; margin-bottom: 1rem; display: none;">Invalid Code</div>
+            <button onclick="submitAccessCode()" class="btn-primary" style="width: 100%;">Unlock Lounge</button>
+        </div>
+    </div>
+
+    <!-- User Hub Modal (After Scan) -->
+    <div id="user-hub-modal" class="modal-overlay">
+        <div class="modal-content" style="max-width: 800px; width: 90%;">
+            <div class="modal-header">
+                <h2>Welcome Back!</h2>
+                <button class="close-modal" onclick="closeUserHubModal()">×</button>
+            </div>
+            <div class="hub-grid"
+                style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; margin-top: 2rem;">
+                <!-- Games Section -->
+                <div class="hub-card" onclick="showSection('games')">
+                    <div style="font-size: 3rem; margin-bottom: 1rem;">🎮</div>
+                    <h3>Play Games</h3>
+                    <p>Relax with our curated selection of mini-games.</p>
+                </div>
+                <!-- Reads Section -->
+                <div class="hub-card" onclick="showSection('reads')">
+                    <div style="font-size: 3rem; margin-bottom: 1rem;">📚</div>
+                    <h3>Read Books</h3>
+                    <p>Enjoy short stories and articles while you wait.</p>
+                </div>
+            </div>
+
+            <!-- Dynamic Content Area -->
+            <div id="hub-content-area"
+                style="display: none; margin-top: 2rem; border-top: 1px solid #ddd; padding-top: 2rem;">
+                <button onclick="backToHub()"
+                    style="background: none; border: none; font-weight: bold; cursor: pointer; margin-bottom: 1rem;">←
+                    Back</button>
+                <div id="games-content" class="hub-section" style="display: none;">
+                    <h3>Mini Games</h3>
+                    <p>Tic-Tac-Toe coming soon...</p>
+                    <!-- Placeholder for actual game logic -->
+                    <div class="game-placeholder"
+                        style="background: #f5f5f5; height: 200px; display: flex; align-items: center; justify-content: center; border-radius: 8px;">
+                        Game Area
+                    </div>
+                </div>
+                <div id="reads-content" class="hub-section" style="display: none;">
+                    <h3>Featured Readings</h3>
+                    <div class="read-item" style="margin-bottom: 1.5rem;">
+                        <h4>The Art of Grooming</h4>
+                        <p style="font-size: 0.9rem; line-height: 1.6;">"A well-groomed man knows that confidence starts
+                            in the mirror..."</p>
+                    </div>
+                    <div class="read-item">
+                        <h4>Style Trends 2026</h4>
+                        <p style="font-size: 0.9rem; line-height: 1.6;">"This year is all about returning to classics
+                            with a modern twist..."</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

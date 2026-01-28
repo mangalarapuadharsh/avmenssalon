@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin | AV Mens Salon</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Work+Sans:wght@300;400;500&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .admin-container {
+            padding: 8rem 2rem 4rem;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--card-bg);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            margin-top: 2rem;
+        }
+
+        th,
+        td {
+            text-align: left;
+            padding: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        th {
+            background-color: #111;
+            color: var(--accent);
+            text-transform: uppercase;
+            font-size: 0.9rem;
+        }
+
+        tr:hover {
+            background-color: rgba(255, 255, 255, 0.02);
+        }
+
+        .refresh-btn {
+            float: right;
+            margin-bottom: 1rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: linear-gradient(145deg, #1a1a1a, #222);
+            padding: 1.5rem;
+            border-radius: 8px;
+            border: 1px solid rgba(212, 175, 55, 0.1);
+            text-align: center;
+        }
+
+        .stat-card h3 {
+            font-size: 0.9rem;
+            color: #888;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .stat-card p {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin: 0;
+            font-family: 'Playfair Display', serif;
+        }
+
+        .delete-btn {
+            background-color: #bf3e3e;
+            color: white;
+            border: none;
+            padding: 0.3rem 0.6rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+
+        .delete-btn:hover {
+            background-color: #a03535;
+        }
+
+        .action-btn {
+            border: none;
+            padding: 0.4rem 0.8rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .action-btn.accept {
+            background: rgba(76, 175, 80, 0.2);
+            color: #4CAF50;
+            border: 1px solid #4CAF50;
+            margin-right: 0.5rem;
+        }
+
+        .action-btn.accept:hover {
+            background: #4CAF50;
+            color: #fff;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.2);
+        }
+
+        .action-btn.reject {
+            background: rgba(191, 62, 62, 0.2);
+            color: #bf3e3e;
+            border: 1px solid #bf3e3e;
+        }
+
+        .action-btn.reject:hover {
+            background: #bf3e3e;
+            color: #fff;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(191, 62, 62, 0.2);
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--accent);
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.8rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #fff;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+
+<body>
+    <header id="navbar">
+        <div class="container nav-container">
+            <div class="logo">
+                <img src="assets/logo.png" alt="AV Mens Salon" style="height: 60px;">
+                <span style="margin-left: 10px; font-size: 1rem; color: #fff;">ADMIN PANEL | BHUMESH</span>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Main Site</a></li>
+                    <li><button onclick="logout()"
+                            style="background:none; border:none; color: #bf3e3e; cursor:pointer; font-family: inherit; font-size: 1rem; margin-left: 1rem;">Logout</button>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="admin-container">
+        <h1>Dashboard Overview</h1>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3>Total Bookings</h3>
+                <p id="total-bookings">-</p>
+            </div>
+            <div class="stat-card" style="border-color: rgba(255, 193, 7, 0.3);">
+                <h3 style="color: #FFC107;">Pending</h3>
+                <p id="pending-count" style="color: #FFC107;">-</p>
+            </div>
+            <div class="stat-card" style="border-color: rgba(76, 175, 80, 0.3);">
+                <h3 style="color: #4CAF50;">Confirmed</h3>
+                <p id="confirmed-count" style="color: #4CAF50;">-</p>
+            </div>
+            <div class="stat-card" style="border-color: rgba(191, 62, 62, 0.3);">
+                <h3 style="color: #bf3e3e;">Rejected</h3>
+                <p id="rejected-count" style="color: #bf3e3e;">-</p>
+            </div>
+            <div class="stat-card" style="background: linear-gradient(145deg, #222, #2a2a2a);">
+                <h3 style="color: #fff;">Today's Work</h3>
+                <p id="today-confirmed" style="color: #fff;">-</p>
+            </div>
+            <div class="stat-card">
+                <h3>Registered Users</h3>
+                <p id="total-users">-</p>
+            </div>
+        </div>
+
+        <div
+            style="margin-bottom: 2rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 1rem; display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <button onclick="showSection('appointments')" class="btn-primary" id="btn-appt">Bookings</button>
+                <button onclick="showSection('users')" class="btn-primary" id="btn-users"
+                    style="background: transparent; border: 1px solid var(--accent);">Users</button>
+                <button onclick="showSection('library')" class="btn-primary" id="btn-library"
+                    style="background: transparent; border: 1px solid var(--accent);">Library</button>
+                <button onclick="showSection('qr')" class="btn-primary" id="btn-qr"
+                    style="background: transparent; border: 1px solid var(--accent); margin-left:1rem;">Access
+                    Code</button>
+            </div>
+            <div>
+                <button onclick="clearPending()" class="btn-primary"
+                    style="background-color: #bf3e3e; border: 1px solid #bf3e3e; color: white; margin-right: 1rem;">
+                    Reject All Pending
+                </button>
+                <button onclick="refreshData()" class="btn-primary refresh-btn"
+                    style="float: none; margin-bottom: 0;">Refresh Data</button>
+            </div>
+        </div>
+
+        <div id="appointments-section">
+            <h2>Booked Appointments</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Service</th>
+                        <th>Phone</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="appointments-list">
+                    <tr>
+                        <td colspan="8" style="text-align:center;">Loading...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div id="users-section" style="display: none;">
+            <h2>Registered Users</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Username</th>
+                        <th>Role</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="users-list">
+                    <tr>
+                        <td colspan="4" style="text-align:center;">Loading...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div id="library-section" style="display: none;">
+            <h2>Library Management</h2>
+
+            <div
+                style="background: rgba(255, 255, 255, 0.05); padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem;">
+                <h3 style="color:var(--accent); margin-top:0;">Upload New Book (PDF)</h3>
+                <form id="upload-book-form">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="form-group">
+                            <label>Title</label>
+                            <input type="text" id="book-title" required placeholder="e.g. Rich Dad Poor Dad">
+                        </div>
+                        <div class="form-group">
+                            <label>Author</label>
+                            <input type="text" id="book-author" required placeholder="e.g. Robert Kiyosaki">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea id="book-desc" rows="2" placeholder="Short description..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>PDF File</label>
+                        <input type="file" id="book-file" accept=".pdf" required>
+                    </div>
+                    <button type="submit" class="btn-primary" style="width: auto;">Upload Book</button>
+                    <span id="upload-msg" style="margin-left: 1rem;"></span>
+                </form>
+            </div>
+
+            <h3>Current Books</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Title</th>
+                        <th>Author</th>
+                        <th>Filename</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="books-list">
+                    <tr>
+                        <td colspan="5" style="text-align:center;">Loading...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div id="qr-section" style="display: none; text-align:center; padding: 2rem;">
+            <h2>Daily Access Code</h2>
+            <p>Provide this code to users to unlock the Lounge.</p>
+
+            <div
+                style="background: rgba(255,255,255,0.05); padding: 2rem; border-radius: 8px; display: inline-block; margin-top: 2rem;">
+                <div id="daily-code-display"
+                    style="font-size: 5rem; font-family: 'Playfair Display', serif; color: var(--accent); letter-spacing: 1px; font-weight: bold;">
+                    ****
+                </div>
+                <p style="color: #666; margin-top: 1rem;">Code changes automatically every day.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function logout() {
+            localStorage.removeItem('user_role');
+            localStorage.removeItem('username');
+            window.location.href = 'login.html';
+        }
+
+        function showSection(section) {
+            const sections = ['appointments', 'users', 'library', 'qr'];
+
+            sections.forEach(sec => {
+                const el = document.getElementById(sec + '-section');
+                const btn = document.getElementById('btn-' + sec);
+                if (el) el.style.display = (sec === section) ? 'block' : 'none';
+                if (btn) {
+                    if (sec === section) {
+                        btn.style.background = 'var(--accent)';
+                        btn.style.color = '#000';
+                    } else {
+                        btn.style.background = 'transparent';
+                        btn.style.color = '#fff';
+                    }
+                }
+            });
+
+            if (section === 'users') fetchUsers();
+            if (section === 'qr') fetchDailyCode();
+            if (section === 'library') fetchBooks();
+        }
+
+        async function fetchDailyCode() {
+            const display = document.getElementById('daily-code-display');
+            display.innerText = "Loading...";
+
+            try {
+                const res = await fetch('/api/access-code', { credentials: 'include' });
+                const data = await res.json();
+                if (data.code) {
+                    display.innerText = data.code;
+                } else {
+                    display.innerText = "ERR";
+                }
+            } catch (e) {
+                console.error(e);
+                display.innerText = "ERR";
+            }
+        }
+
+        async function fetchUsers() {
+            const tbody = document.getElementById('users-list');
+            try {
+                const response = await fetch('/api/users');
+                const data = await response.json();
+
+                tbody.innerHTML = '';
+                if (data.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">No users found.</td></tr>';
+                    return;
+                }
+
+                data.forEach(user => {
+                    const row = `
+                <tr>
+                    <td>#${user.id}</td>
+                    <td>${user.username}</td>
+                    <td>${user.role}</td>
+                    <td>
+                        ${user.username !== 'bhumesh' ?
+                            `<button onclick="deleteUser(${user.id})" class="delete-btn">Delete</button>` :
+                            '<span style="color:#666;">-</span>'}
+                    </td>
+                </tr>
+                `;
+                    tbody.innerHTML += row;
+                });
+            } catch (error) {
+                console.error('Error fetching users:', error);
+            }
+        }
+
+        async function deleteUser(id) {
+            if (!confirm('Are you sure you want to delete this user?')) return;
+
+            try {
+                const response = await fetch(`/api/users/${id}`, { method: 'DELETE' });
+                if (response.ok) {
+                    fetchUsers(); // Reload list
+                    fetchStats(); // Update stats
+                } else {
+                    const res = await response.json();
+                    alert('Error: ' + res.error);
+                }
+            } catch (error) {
+                alert('Connection error');
+            }
+        }
+
+        async function fetchStats() {
+            try {
+                const response = await fetch('/api/stats');
+                const data = await response.json();
+                document.getElementById('total-bookings').innerText = data.total_bookings;
+                document.getElementById('total-users').innerText = data.total_users;
+
+                document.getElementById('pending-count').innerText = data.pending;
+                document.getElementById('confirmed-count').innerText = data.confirmed;
+                document.getElementById('rejected-count').innerText = data.rejected;
+                document.getElementById('today-confirmed').innerText = data.today_confirmed;
+            } catch (error) {
+                console.error('Error fetching stats:', error);
+            }
+        }
+
+        async function fetchAppointments() {
+            const tbody = document.getElementById('appointments-list');
+            tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">Loading...</td></tr>';
+
+            try {
+                const response = await fetch('/appointments');
+                const data = await response.json();
+
+                tbody.innerHTML = '';
+
+                if (data.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">No appointments found.</td></tr>';
+                    return;
+                }
+
+                data.forEach(appt => {
+                    const row = `
+                <tr>
+                    <td>#${appt.id}</td>
+                    <td>${appt.name}</td>
+                    <td>${appt.date}</td>
+                    <td>${appt.time}</td>
+                    <td>${appt.service}</td>
+                    <td>${appt.phone}</td>
+                    <td>
+                        <span style="
+                                    padding: 0.2rem 0.5rem;
+                                    border-radius: 4px;
+                                    font-size: 0.8rem;
+                                    font-weight: bold;
+                                    color: #000;
+                                    background: ${appt.status === 'confirmed' ? '#4CAF50' : (appt.status === 'rejected' ? '#bf3e3e' : '#FFC107')};
+                                ">${appt.status.toUpperCase()}</span>
+                    </td>
+                    <td>
+                        ${appt.status === 'pending' ? `
+                                    <button onclick="updateStatus(${appt.id}, 'confirmed')" class="action-btn accept">Accept</button>
+                                    <button onclick="updateStatus(${appt.id}, 'rejected')" class="action-btn reject">Reject</button>
+                                ` : '-'}
+                    </td>
+                </tr>
+                `;
+                    tbody.innerHTML += row;
+                });
+            } catch (error) {
+                console.error('Error:', error);
+                tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; color: red;">Error loading data. Is backend running?</td></tr>';
+            }
+        }
+
+        async function updateStatus(id, status) {
+            if (!confirm(`Are you sure you want to ${status} this appointment?`)) return;
+
+            try {
+                const response = await fetch(`/api/appointments/${id}/status`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ status: status })
+                });
+
+                if (response.ok) {
+                    fetchAppointments(); // Refresh list
+                } else {
+                    const res = await response.json();
+                    alert('Error: ' + res.error);
+                }
+            } catch (error) {
+                console.error(error);
+                alert('Connection failed');
+            }
+        }
+
+        async function clearPending() {
+            if (!confirm('Are you sure you want to REJECT ALL pending appointments? This cannot be undone.')) return;
+
+            try {
+                const response = await fetch('/api/appointments/clear-pending', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    alert(data.message);
+                    refreshData();
+                } else {
+                    const res = await response.json();
+                    alert('Error: ' + res.error);
+                }
+            } catch (error) {
+                console.error(error);
+                alert('Connection failed');
+            }
+        }
+
+        // --- Library Logic ---
+        document.getElementById('upload-book-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = e.target.querySelector('button');
+            const originalText = btn.innerText;
+            btn.innerText = "Uploading...";
+            btn.disabled = true;
+
+            const formData = new FormData();
+            formData.append('title', document.getElementById('book-title').value);
+            formData.append('author', document.getElementById('book-author').value);
+            formData.append('description', document.getElementById('book-desc').value);
+            formData.append('file', document.getElementById('book-file').files[0]);
+
+            try {
+                const response = await fetch('/api/books', {
+                    method: 'POST',
+                    body: formData, // No Content-Type header needed, browser sets it
+                    credentials: 'include'
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    document.getElementById('upload-msg').innerText = "Success!";
+                    document.getElementById('upload-msg').style.color = "#4CAF50";
+                    e.target.reset();
+                    fetchBooks();
+                } else {
+                    document.getElementById('upload-msg').innerText = result.error;
+                    document.getElementById('upload-msg').style.color = "#bf3e3e";
+                }
+            } catch (err) {
+                console.error(err);
+                alert("Upload failed.");
+            } finally {
+                btn.innerText = originalText;
+                btn.disabled = false;
+                setTimeout(() => document.getElementById('upload-msg').innerText = '', 3000);
+            }
+        });
+
+        async function fetchBooks() {
+            const tbody = document.getElementById('books-list');
+            try {
+                const response = await fetch('/api/books');
+                const data = await response.json();
+
+                tbody.innerHTML = '';
+                if (data.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">No books found.</td></tr>';
+                    return;
+                }
+
+                data.forEach(book => {
+                    const row = `
+                        <tr>
+                            <td>#${book.id}</td>
+                            <td>${book.title}</td>
+                            <td>${book.author}</td>
+                            <td><a href="/uploads/${book.filename}" target="_blank" style="color:var(--accent);">${book.filename}</a></td>
+                            <td>
+                                <button onclick="deleteBook(${book.id})" class="delete-btn">Delete</button>
+                            </td>
+                        </tr>
+                   `;
+                    tbody.innerHTML += row;
+                });
+            } catch (e) {
+                console.error(e);
+            }
+        }
+
+        async function deleteBook(id) {
+            if (!confirm("Delete this book?")) return;
+            try {
+                await fetch(`/api/books/${id}`, { method: 'DELETE', credentials: 'include' });
+                fetchBooks();
+            } catch (e) {
+                alert("Delete failed");
+            }
+        }
+
+        function refreshData() {
+            fetchStats();
+            fetchAppointments();
+            fetchUsers();
+            // Don't fetch library unless active to save bandwidth
+        }
+
+        // Load on start
+        refreshData();
+    </script>
+</body>
+
+</html>

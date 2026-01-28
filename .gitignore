@@ -1,0 +1,14 @@
+# SSH Keys
+id_ed25519
+id_ed25519.pub
+
+# Python
+__pycache__/
+*.pyc
+instance/
+venv/
+.env
+
+# OS
+.DS_Store
+Thumbs.db
