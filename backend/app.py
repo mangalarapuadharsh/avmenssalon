@@ -4,12 +4,15 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 from datetime import datetime
 
 from werkzeug.utils import secure_filename
 
 app = Flask(__name__, static_folder='../web', static_url_path='')
-app.config['SECRET_KEY'] = 'your-secret-key-change-this-in-production' # Change this!
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'default-dev-key')
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///appointments_v3.db'
 
 # Absolute path for uploads
@@ -73,7 +76,8 @@ def init_db():
         
         # Seed Admin
         if not User.query.filter_by(username='bhumesh').first():
-            hashed_pw = bcrypt.generate_password_hash('bhumesh@123').decode('utf-8')
+            admin_pw = os.environ.get('ADMIN_PASSWORD', 'bhumesh@123')
+            hashed_pw = bcrypt.generate_password_hash(admin_pw).decode('utf-8')
             admin = User(username='bhumesh', password=hashed_pw, role='admin')
             db.session.add(admin)
             db.session.commit()
