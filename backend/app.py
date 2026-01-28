@@ -348,8 +348,15 @@ def verify_access_code():
         return jsonify({'message': 'Access granted', 'success': True})
     return jsonify({'error': 'Invalid code', 'success': False}), 401
 
+# Initialize DB (Run on import so Gunicorn creates tables)
+with app.app_context():
+    db.create_all()
+    # Check if admin exists logic is inside init_db, but init_db duplicates create_all
+    # Let's just call init_db() directly if we want the seeding
+    
+init_db()
+
 if __name__ == '__main__':
-    init_db()
     print("Secure Server Starting...")
     # debug=False for production simulation
     app.run(debug=True, port=5000) 
