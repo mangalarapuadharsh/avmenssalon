@@ -13,7 +13,12 @@ from werkzeug.utils import secure_filename
 
 app = Flask(__name__, static_folder='../web', static_url_path='')
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'default-dev-key')
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///appointments_v3.db'
+
+# Use env var for DB if available (Render provides DATABASE_URL), otherwise local sqlite
+database_url = os.environ.get('DATABASE_URL')
+if database_url and database_url.startswith("postgres://"):
+    database_url = database_url.replace("postgres://", "postgresql://", 1) # SQLAlchemy fix for Render
+app.config['SQLALCHEMY_DATABASE_URI'] = database_url or 'sqlite:///appointments_v3.db'
 
 # Absolute path for uploads
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
