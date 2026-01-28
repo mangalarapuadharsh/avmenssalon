@@ -316,7 +316,7 @@
 
         const PORT = '5000';
         const HOST = window.location.hostname;
-        const API_BASE = (window.location.port === PORT) ? '' : `http://${HOST}:${PORT}`;
+        const API_BASE = (HOST === 'localhost' || HOST === '127.0.0.1') ? `http://${HOST}:${PORT}` : '';
 
         async function loadBooks() {
             const container = document.getElementById('reads-container');
