@@ -5,8 +5,9 @@ if (window.location.protocol === 'file:') {
 
 const PORT = '5000';
 const HOST = window.location.hostname; // e.g. 'localhost' or '127.0.0.1'
-// If we are on the backend port, use relative paths. Otherwise point to backend on same host.
-const API_BASE = (window.location.port === PORT) ? '' : `http://${HOST}:${PORT}`;
+
+// If localhost, use explicit port. If production, use relative path (default standard port)
+const API_BASE = (HOST === 'localhost' || HOST === '127.0.0.1') ? `http://${HOST}:${PORT}` : '';
 
 // Global helper to add lounge link (needs to be global for submitAccessCode)
 function addLoungeLink() {
