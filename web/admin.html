@@ -611,6 +611,27 @@
             }
         }
 
+        // Prevent Back Button caching
+        window.addEventListener('pageshow', function (event) {
+            if (event.persisted || (window.performance && window.performance.navigation.type === 2)) {
+                window.location.reload();
+            }
+        });
+
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                fetch('/api/logout', { method: 'POST' })
+                    .then(() => {
+                        alert("Logged out!");
+                        // Clear local storage if any
+                        localStorage.removeItem('user');
+                        // Replace history so back button goes nowhere or login
+                        window.location.replace('/login.html');
+                    })
+                    .catch(err => console.error(err));
+            }
+        }
+
         async function deleteBook(id) {
             if (!confirm("Delete this book?")) return;
             try {

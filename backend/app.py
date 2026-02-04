@@ -48,6 +48,13 @@ def health_check():
 app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
+@app.after_request
+def add_header(response):
+    response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+    response.headers["Pragma"] = "no-cache"
+    response.headers["Expires"] = "0"
+    return response
+
 CORS(app, supports_credentials=True) # Enable CORS with cookies
 
 db = SQLAlchemy(app)

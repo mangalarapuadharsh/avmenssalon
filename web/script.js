@@ -248,11 +248,25 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+// Handle Back Button Persistence (BFCache)
+window.addEventListener('pageshow', function (event) {
+    if (event.persisted || (window.performance && window.performance.navigation.type === 2)) {
+        window.location.reload();
+    }
+});
+
 function logout() {
     if (confirm('Are you sure you want to logout?')) {
-        localStorage.removeItem('hubUnlocked'); // Lock the hub again
+        // Use replace to prevent back button from working
         fetch(`${API_BASE}/api/logout`, { method: 'POST', credentials: 'include' })
-            .then(() => window.location.reload());
+            .then(res => res.json())
+            .then(data => {
+                alert('Logged out successfully');
+                localStorage.removeItem('user');
+                // Replace current history entry so Back button doesn't work
+                window.location.replace('/login.html');
+            })
+            .catch(err => console.error('Error logging out:', err));
     }
 }
 
