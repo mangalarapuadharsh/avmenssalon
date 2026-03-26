@@ -69,6 +69,16 @@ def add_header(response):
 
 CORS(app, supports_credentials=True) # Enable CORS with cookies
 
+@app.errorhandler(500)
+def internal_error(error):
+    print(f"[ERROR] 500 Server Error: {error}", file=sys.stderr)
+    return jsonify({'error': 'Internal Server Error. The database may be offline or unreachable. Please check Render logs.'}), 500
+
+@app.errorhandler(Exception)
+def handle_exception(e):
+    print(f"[ERROR] Unhandled Exception: {e}", file=sys.stderr)
+    return jsonify({'error': f'An unexpected error occurred: {str(e)}'}), 500
+
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
 login_manager = LoginManager(app)

@@ -1,0 +1,88 @@
+[33mcommit 666186faf66defb8f7246208bba560ea34988424[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m
+Author: Mangalarapu Adharsh <mangalarapuadharsh@gmail.com>
+Date:   Wed Feb 4 21:58:02 2026 +0530
+
+    Fix logout persistence and back button issue
+
+[1mdiff --git a/backend/app.py b/backend/app.py[m
+[1mindex 6eb8e49..0e8a3b5 100644[m
+[1m--- a/backend/app.py[m
+[1m+++ b/backend/app.py[m
+[36m@@ -48,6 +48,13 @@[m [mdef health_check():[m
+ app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'[m
+ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False[m
+ [m
+[32m+[m[32m@app.after_request[m
+[32m+[m[32mdef add_header(response):[m
+[32m+[m[32m    response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"[m
+[32m+[m[32m    response.headers["Pragma"] = "no-cache"[m
+[32m+[m[32m    response.headers["Expires"] = "0"[m
+[32m+[m[32m    return response[m
+[32m+[m
+ CORS(app, supports_credentials=True) # Enable CORS with cookies[m
+ [m
+ db = SQLAlchemy(app)[m
+[1mdiff --git a/web/admin.html b/web/admin.html[m
+[1mindex 038367c..1ad3444 100644[m
+[1m--- a/web/admin.html[m
+[1m+++ b/web/admin.html[m
+[36m@@ -611,6 +611,27 @@[m
+             }[m
+         }[m
+ [m
+[32m+[m[32m        // Prevent Back Button caching[m
+[32m+[m[32m        window.addEventListener('pageshow', function (event) {[m
+[32m+[m[32m            if (event.persisted || (window.performance && window.performance.navigation.type === 2)) {[m
+[32m+[m[32m                window.location.reload();[m
+[32m+[m[32m            }[m
+[32m+[m[32m        });[m
+[32m+[m
+[32m+[m[32m        function logout() {[m
+[32m+[m[32m            if (confirm('Are you sure you want to logout?')) {[m
+[32m+[m[32m                fetch('/api/logout', { method: 'POST' })[m
+[32m+[m[32m                    .then(() => {[m
+[32m+[m[32m                        alert("Logged out!");[m
+[32m+[m[32m                        // Clear local storage if any[m
+[32m+[m[32m                        localStorage.removeItem('user');[m
+[32m+[m[32m                        // Replace history so back button goes nowhere or login[m
+[32m+[m[32m                        window.location.replace('/login.html');[m
+[32m+[m[32m                    })[m
+[32m+[m[32m                    .catch(err => console.error(err));[m
+[32m+[m[32m            }[m
+[32m+[m[32m        }[m
+[32m+[m
+         async function deleteBook(id) {[m
+             if (!confirm("Delete this book?")) return;[m
+             try {[m
+[1mdiff --git a/web/script.js b/web/script.js[m
+[1mindex d4022e0..b19b4e7 100644[m
+[1m--- a/web/script.js[m
+[1m+++ b/web/script.js[m
+[36m@@ -248,11 +248,25 @@[m [mdocument.addEventListener('DOMContentLoaded', () => {[m
+         });[m
+     }[m
+ });[m
+[32m+[m[32m// Handle Back Button Persistence (BFCache)[m
+[32m+[m[32mwindow.addEventListener('pageshow', function (event) {[m
+[32m+[m[32m    if (event.persisted || (window.performance && window.performance.navigation.type === 2)) {[m
+[32m+[m[32m        window.location.reload();[m
+[32m+[m[32m    }[m
+[32m+[m[32m});[m
+[32m+[m
+ function logout() {[m
+     if (confirm('Are you sure you want to logout?')) {[m
+[31m-        localStorage.removeItem('hubUnlocked'); // Lock the hub again[m
+[32m+[m[32m        // Use replace to prevent back button from working[m
+         fetch(`${API_BASE}/api/logout`, { method: 'POST', credentials: 'include' })[m
+[31m-            .then(() => window.location.reload());[m
+[32m+[m[32m            .then(res => res.json())[m
+[32m+[m[32m            .then(data => {[m
+[32m+[m[32m                alert('Logged out successfully');[m
+[32m+[m[32m                localStorage.removeItem('user');[m
+[32m+[m[32m                // Replace current history entry so Back button doesn't work[m
+[32m+[m[32m                window.location.replace('/login.html');[m
+[32m+[m[32m            })[m
+[32m+[m[32m            .catch(err => console.error('Error logging out:', err));[m
+     }[m
+ }[m
+ [m
