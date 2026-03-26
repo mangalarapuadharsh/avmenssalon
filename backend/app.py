@@ -4,10 +4,11 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 import os
+import sys
 from dotenv import load_dotenv
 
 load_dotenv()
-from datetime import datetime
+from datetime import datetime, timezone
 
 from werkzeug.utils import secure_filename
 
@@ -18,7 +19,18 @@ app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'default-dev-key')
 database_url = os.environ.get('DATABASE_URL')
 if database_url and database_url.startswith("postgres://"):
     database_url = database_url.replace("postgres://", "postgresql://", 1) # SQLAlchemy fix for Render
+
+# Log which database we're connecting to (helpful for debugging on Render)
+if database_url:
+    print(f"[INFO] Using PostgreSQL database", file=sys.stderr)
+else:
+    print(f"[INFO] No DATABASE_URL found, falling back to SQLite", file=sys.stderr)
+
 app.config['SQLALCHEMY_DATABASE_URI'] = database_url or 'sqlite:///appointments_v3.db'
+app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
+    'pool_pre_ping': True,  # Test connections before using them (prevents stale connection errors)
+    'pool_recycle': 300,    # Recycle connections every 5 minutes
+}
 
 # Absolute path for uploads
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
@@ -75,7 +87,7 @@ class Book(db.Model):
     author = db.Column(db.String(100), nullable=False)
     description = db.Column(db.String(500))
     filename = db.Column(db.String(200), nullable=False)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
 
 class Appointment(db.Model):
     __table_args__ = (db.UniqueConstraint('date', 'time', name='unique_appointment_slot'),)
@@ -87,7 +99,7 @@ class Appointment(db.Model):
     time = db.Column(db.String(20), nullable=False)
     status = db.Column(db.String(20), nullable=False, default='pending') # New Field
     username = db.Column(db.String(80)) # Link to user
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -279,7 +291,6 @@ def delete_user(user_id):
         return jsonify({'error': 'Cannot delete main admin'}), 403
         
     db.session.delete(user)
-    db.session.delete(user)
     db.session.commit()
     return jsonify({'message': 'User deleted'})
 
@@ -373,14 +384,15 @@ def verify_access_code():
     return jsonify({'error': 'Invalid code', 'success': False}), 401
 
 # Initialize DB (Run on import so Gunicorn creates tables)
-with app.app_context():
-    db.create_all()
-    # Check if admin exists logic is inside init_db, but init_db duplicates create_all
-    # Let's just call init_db() directly if we want the seeding
-    
-init_db()
+try:
+    with app.app_context():
+        db.create_all()
+    init_db()
+    print("[INFO] Database initialized successfully", file=sys.stderr)
+except Exception as e:
+    print(f"[ERROR] Database initialization failed: {e}", file=sys.stderr)
+    print("[ERROR] Check your DATABASE_URL environment variable on Render", file=sys.stderr)
 
 if __name__ == '__main__':
     print("Secure Server Starting...")
-    # debug=False for production simulation
-    app.run(debug=True, port=5000) 
+    app.run(debug=True, port=5000)
